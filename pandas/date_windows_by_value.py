@@ -1,4 +1,5 @@
 import pandas as pd
+import datetime
 
 # Create sample DataFrame
 df = pd.DataFrame({'date': ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-04','2022-01-05', '2022-01-06'],
@@ -22,16 +23,16 @@ def get_dates(df,target_sum=100):
   for i, row in df.iterrows():
       if row['cumulative_sum'] - sum_till_now >= target_sum:
           if start_date:
-              date_ranges.append((start_date, row['date']))
+              date_ranges.append((start_date, row['date']+datetime.timedelta(milliseconds=1)))
           else:
-              date_ranges.append((row['date'], row['date']))
+              date_ranges.append((row['date'], row['date']+datetime.timedelta(milliseconds=1)))
           sum_till_now = row['cumulative_sum']
           start_date = None
       elif row['cumulative_sum'] + row['next'] - sum_till_now > target_sum:
         if start_date:
-            date_ranges.append((start_date, row['date']))
+            date_ranges.append((start_date, row['date']+datetime.timedelta(milliseconds=1)))
         else:
-            date_ranges.append((row['date'], row['date']))
+            date_ranges.append((row['date'], row['date']+datetime.timedelta(milliseconds=1)))
         sum_till_now = row['cumulative_sum']
         start_date = None
       else:
@@ -39,7 +40,7 @@ def get_dates(df,target_sum=100):
           start_date = row['date']
   # If the last group does not reach the target sum, add the last date as the end date
   if start_date:
-      date_ranges.append((start_date, df['date'].iloc[-1]))
+      date_ranges.append((start_date, df['date'].iloc[-1]+datetime.timedelta(milliseconds=1)))
   return date_ranges
 
 # Print the date ranges of the groups
