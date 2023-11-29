@@ -38,7 +38,7 @@ def extract_text_from_image_aws(image_body):
     for item in response['Blocks']:
         if item['BlockType'] == 'LINE':
             print(item['Text'])
-            my_txt = item['Text']
+            my_txt += ' '+item['Text']
             st.text(item['Text'])
     return my_txt
 
