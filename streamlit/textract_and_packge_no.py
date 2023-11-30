@@ -9,6 +9,13 @@ client = boto3.client('textract',
                       region_name='us-east-1')  # replace with your region
 import re
 
+def extract_number(text):
+    # Regex pattern for a number like 7946 6697 8391
+    pattern = r'\b\d{4} \d{4} \d{4}\b'
+
+    matches = re.findall(pattern, text)
+    return matches
+
 def extract_package_code(text):
     # Example regex pattern for a package code (adjust according to your needs)
     pattern = r'\b[A-Z0-9]{10}\b'  # Adjust this pattern to match your package code format
@@ -51,4 +58,10 @@ if __name__ == "__main__":
         st.image(picture)
         extracted_text = extract_text_from_image_aws(picture)
         package_codes = extract_package_code(extracted_text)
-        st.title('Pakage is: ' + package_codes[0])
+        if len(package_codes)>0:
+            st.title('Pakage is: ' + package_codes[0])
+        #check for fedex tracking number if not found 
+        else:
+            tracking_number=extract_number(extracted_text)
+            if len(tracking_number)>0:
+                st.title('Track # is: ' +tracking_number[0])
