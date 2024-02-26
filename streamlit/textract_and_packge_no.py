@@ -1,5 +1,4 @@
 import streamlit as st
-import pytesseract
 from PIL import Image
 import io
 import boto3
