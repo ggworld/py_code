@@ -1,0 +1,52 @@
+import networkx as nx
+import matplotlib.pyplot as plt
+import time
+
+# Create a directed graph
+G = nx.DiGraph()
+
+# Define nodes
+nodes = ["User", "API Gateway", "Auth Service", "DB", "Microservice A", "Microservice B"]
+G.add_nodes_from(nodes)
+
+# Define edges
+edges = [
+    ("User", "API Gateway"),
+    ("API Gateway", "Auth Service"),
+    ("API Gateway", "Microservice A"),
+    ("Microservice A", "DB"),
+    ("Microservice B", "DB"),
+]
+G.add_edges_from(edges)
+
+# Define base positions for layout
+pos = nx.spring_layout(G, seed=42)
+
+# Function to update node colors with delay
+def draw_graph(node_colors, step_title):
+    plt.clf()  # Clear the figure
+    plt.title(step_title)
+    
+    # Draw the graph with updated colors
+    nx.draw(G, pos, with_labels=True, node_color=node_colors, edge_color="gray",
+            node_size=2000, font_size=10)
+    
+    plt.pause(0.5)  # Allow Matplotlib to update
+    time.sleep(2)   # Wait for 2 seconds before moving to the next phase
+
+# Step 1: All nodes in Gray
+node_colors = ["gray" for _ in G.nodes()]
+draw_graph(node_colors, "Step 1: All Nodes in Gray")
+
+# Step 2: Highlight "User" & "API Gateway" in Green
+green_nodes = ["User", "API Gateway"]
+node_colors = ["#76c893" if node in green_nodes else "gray" for node in G.nodes()]
+draw_graph(node_colors, "Step 2: User & API Gateway in Green")
+
+# Step 3: Highlight "Microservice A" in Yellow
+yellow_nodes = ["Microservice A"]
+node_colors = ["#ffdd57" if node in yellow_nodes else 
+               "#76c893" if node in green_nodes else "gray" for node in G.nodes()]
+draw_graph(node_colors, "Step 3: Microservice A in Yellow")
+
+plt.show()  # Final display
