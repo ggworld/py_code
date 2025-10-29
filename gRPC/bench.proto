@@ -1,0 +1,10 @@
+// proto/bench.proto
+syntax = "proto3";
+package bench;
+
+service Bench {
+  rpc Crunch (Work) returns (Result);
+}
+
+message Work   { int32 n = 1; }   // do n iterations of CPU work
+message Result { double value = 1; }
